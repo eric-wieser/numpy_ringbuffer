@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 with open('numpy_ringbuffer/__about__.py') as f:
     exec(f.read())
@@ -13,7 +13,7 @@ except (IOError, ImportError):
 setup(
     name="numpy_ringbuffer",
     version=__version__,
-    py_modules=['numpy_ringbuffer'],
+    packages=['numpy_ringbuffer'],
 
     install_requires=["numpy"],
 
