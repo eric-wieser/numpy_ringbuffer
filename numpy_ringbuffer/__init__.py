@@ -71,7 +71,7 @@ class RingBuffer(Sequence):
 			if not self._allow_overwrite:
 				raise IndexError('append to a full RingBuffer with overwrite disabled')
 			elif not len(self):
-				raise ValueError('append to degenerate RingBuffer')
+				return
 			else:
 				self._left_index += 1
 
@@ -84,7 +84,7 @@ class RingBuffer(Sequence):
 			if not self._allow_overwrite:
 				raise IndexError('append to a full RingBuffer with overwrite disabled')
 			elif not len(self):
-				raise ValueError('append to degenerate RingBuffer')
+				return
 			else:
 				self._right_index -= 1
 

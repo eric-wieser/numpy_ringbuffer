@@ -143,10 +143,12 @@ class TestAll(unittest.TestCase):
 		r = RingBuffer(0)
 		np.testing.assert_equal(r, np.array([]))
 
-		with self.assertRaisesRegex(ValueError, "degenerate"):
+		# this does not error with deque(maxlen=0), so should not error here
+		try:
 			r.append(0)
-		with self.assertRaisesRegex(ValueError, "degenerate"):
 			r.appendleft(0)
+		except IndexError:
+			self.fail()
 
 if not hasattr(TestAll, 'assertRaisesRegex'):
 	TestAll.assertRaisesRegex = TestAll.assertRaisesRegexp
