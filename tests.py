@@ -45,6 +45,19 @@ class TestAll(unittest.TestCase):
 		np.testing.assert_equal(r, np.array([6, 5, 4, 3, 2]))
 		self.assertEqual(len(r), 5)
 
+	def test_pops(self):
+		r = RingBuffer(3)
+		r.append(1)
+		r.appendleft(2)
+		r.append(3)
+		np.testing.assert_equal(r, np.array([2, 1, 3]))
+
+		self.assertEqual(r.pop(), 3)
+		np.testing.assert_equal(r, np.array([2, 1]))
+
+		self.assertEqual(r.popleft(), 2)
+		np.testing.assert_equal(r, np.array([1]))
+
 	def test_2d(self):
 		r = RingBuffer(5, dtype=(np.float, 2))
 
