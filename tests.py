@@ -3,6 +3,24 @@ import numpy as np
 from numpy_ringbuffer import RingBuffer
 
 class TestAll(unittest.TestCase):
+	def test_dtype(self):
+		r = RingBuffer(5)
+		self.assertEqual(r.dtype, np.dtype(np.float64))
+
+		r = RingBuffer(5, dtype=np.bool)
+		self.assertEqual(r.dtype, np.dtype(np.bool))
+
+	def test_sizes(self):
+		r = RingBuffer(5, dtype=(int, 2))
+		self.assertEqual(r.maxlen, 5)
+		self.assertEqual(len(r), 0)
+		self.assertEqual(r.shape, (0,2))
+
+		r.append([0, 0])
+		self.assertEqual(r.maxlen, 5)
+		self.assertEqual(len(r), 1)
+		self.assertEqual(r.shape, (1,2))
+
 	def test_append(self):
 		r = RingBuffer(5)
 
@@ -75,6 +93,13 @@ class TestAll(unittest.TestCase):
 		np.testing.assert_equal(r, np.array([[5, 6], [1, 2], [3, 4]]))
 		self.assertEqual(len(r), 3)
 		self.assertEqual(np.shape(r), (3, 2))
+
+	def test_iter(self):
+		r = RingBuffer(5)
+		for i in range(5):
+			r.append(i)
+		for i, j in zip(r, range(5)):
+			self.assertEqual(i, j)
 
 	def test_repr(self):
 		r = RingBuffer(5, dtype=np.int)

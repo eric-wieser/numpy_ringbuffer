@@ -28,9 +28,22 @@ class RingBuffer(Sequence):
 		elif self._left_index < 0:
 			self._left_index += self._capacity
 			self._right_index += self._capacity
+
 	@property
 	def is_full(self):
 		return len(self) == self._capacity
+
+	# numpy compatibility
+	def __array__(self):
+		return self._unwrap()
+
+	@property
+	def dtype(self):
+		return self._arr.dtype
+
+	@property
+	def shape(self):
+		return (len(self),) + self._arr.shape[1:]
 
 
 	# these mirror methods from deque
@@ -76,9 +89,6 @@ class RingBuffer(Sequence):
 		self._fix_indices()
 		return res
 
-
-	def __array__(self):
-		return self._unwrap()
 
 	# implement Sequence methods
 	def __len__(self):
