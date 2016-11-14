@@ -2,14 +2,26 @@ import numpy as np
 from collections import Sequence
 
 class RingBuffer(Sequence):
-	raise_on_overwrite = False
+	def __init__(self, capacity, dtype=float, allow_overwrite=True):
+		"""
+		Create a new ring buffer with the given capacity and element type
 
-	def __init__(self, capacity, dtype=np.float64):
+		Parameters
+		----------
+		capacity: int
+			The maximum capacity of the ring buffer
+		dtype: data-type, optional
+			Desired type of buffer elements. Use a type like (float, 2) to
+			produce a buffer with shape (N, 2)
+		allow_overwrite: bool
+			If false, throw an IndexError when trying to append to an alread
+			full buffer
+		"""
 		self._arr = np.empty(capacity, dtype)
 		self._left_index = 0
 		self._right_index = 0
 		self._capacity = capacity
-
+		self._allow_overwrite = allow_overwrite
 
 	def _unwrap(self):
 		""" Copy the data from this buffer into unwrapped form """
@@ -31,6 +43,7 @@ class RingBuffer(Sequence):
 
 	@property
 	def is_full(self):
+		""" True if there is no more space in the buffer """
 		return len(self) == self._capacity
 
 	# numpy compatibility
@@ -53,8 +66,10 @@ class RingBuffer(Sequence):
 
 	def append(self, value):
 		if self.is_full:
-			if self.raise_on_overwrite:
-				raise ValueError
+			if not self._allow_overwrite:
+				raise IndexError('append to a full RingBuffer with overwrite disabled')
+			elif not len(self):
+				raise ValueError('append to degenerate RingBuffer')
 			else:
 				self._left_index += 1
 
@@ -64,8 +79,10 @@ class RingBuffer(Sequence):
 
 	def appendleft(self, value):
 		if self.is_full:
-			if self.raise_on_overwrite:
-				raise ValueError
+			if not self._allow_overwrite:
+				raise IndexError('append to a full RingBuffer with overwrite disabled')
+			elif not len(self):
+				raise ValueError('append to degenerate RingBuffer')
 			else:
 				self._right_index -= 1
 
@@ -75,7 +92,7 @@ class RingBuffer(Sequence):
 
 	def pop(self):
 		if len(self) == 0:
-			raise IndexError
+			raise IndexError("pop from an empty RingBuffer")
 		self._right_index -= 1
 		self._fix_indices()
 		res = self._arr[self._right_index % self._capacity]
@@ -83,7 +100,7 @@ class RingBuffer(Sequence):
 
 	def popleft(self):
 		if len(self) == 0:
-			raise IndexError
+			raise IndexError("pop from an empty RingBuffer")
 		res = self._arr[self._left_index]
 		self._left_index += 1
 		self._fix_indices()

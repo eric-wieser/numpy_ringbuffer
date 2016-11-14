@@ -42,6 +42,9 @@ class TestAll(unittest.TestCase):
 		np.testing.assert_equal(r, np.array([2, 3, 4, 5, 6]))
 		self.assertEqual(len(r), 5)
 
+		self.assertEqual(r[4], 6)
+		self.assertEqual(r[-1], 6)
+
 	def test_appendleft(self):
 		r = RingBuffer(5)
 
@@ -76,6 +79,13 @@ class TestAll(unittest.TestCase):
 		self.assertEqual(r.popleft(), 2)
 		np.testing.assert_equal(r, np.array([1]))
 
+		# test empty pops
+		empty = RingBuffer(1)
+		with self.assertRaisesRegex(IndexError, "pop from an empty RingBuffer"):
+			empty.pop()
+		with self.assertRaisesRegex(IndexError, "pop from an empty RingBuffer"):
+			empty.popleft()
+
 	def test_2d(self):
 		r = RingBuffer(5, dtype=(np.float, 2))
 
@@ -93,6 +103,10 @@ class TestAll(unittest.TestCase):
 		np.testing.assert_equal(r, np.array([[5, 6], [1, 2], [3, 4]]))
 		self.assertEqual(len(r), 3)
 		self.assertEqual(np.shape(r), (3, 2))
+
+		np.testing.assert_equal(r[0], [5, 6])
+		np.testing.assert_equal(r[0,:], [5, 6])
+		np.testing.assert_equal(r[:,0], [5, 1, 3])
 
 	def test_iter(self):
 		r = RingBuffer(5)
