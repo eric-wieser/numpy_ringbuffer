@@ -76,5 +76,12 @@ class TestAll(unittest.TestCase):
 		self.assertEqual(len(r), 3)
 		self.assertEqual(np.shape(r), (3, 2))
 
+	def test_repr(self):
+		r = RingBuffer(5, dtype=np.int)
+		for i in range(5):
+			r.append(i)
+
+		self.assertEqual(repr(r), '<RingBuffer of array([0, 1, 2, 3, 4])>')
+
 if __name__ == '__main__':
 	unittest.main()

@@ -92,4 +92,4 @@ class RingBuffer(Sequence):
 
 	# Everything else
 	def __repr__(self):
-		return '<RingBuffer of {}>'.format(np.asarray(self))
+		return '<RingBuffer of {!r}>'.format(np.asarray(self))
