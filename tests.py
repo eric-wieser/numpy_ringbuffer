@@ -66,6 +66,22 @@ class TestAll(unittest.TestCase):
 		np.testing.assert_equal(r, np.array([6, 5, 4, 3, 2]))
 		self.assertEqual(len(r), 5)
 
+	def test_extend(self):
+		r = RingBuffer(5)
+		r.extend([1, 2, 3])
+		np.testing.assert_equal(r, np.array([1, 2, 3]))
+		r.popleft()
+		r.extend([4, 5, 6])
+		np.testing.assert_equal(r, np.array([2, 3, 4, 5, 6]))
+		r.extendleft([0, 1])
+		np.testing.assert_equal(r, np.array([0, 1, 2, 3, 4]))
+
+		r.extendleft([1, 2, 3, 4, 5, 6, 7])
+		np.testing.assert_equal(r, np.array([1, 2, 3, 4, 5]))
+
+		r.extend([1, 2, 3, 4, 5, 6, 7])
+		np.testing.assert_equal(r, np.array([3, 4, 5, 6, 7]))
+
 	def test_pops(self):
 		r = RingBuffer(3)
 		r.append(1)
@@ -129,10 +145,16 @@ class TestAll(unittest.TestCase):
 		r.appendleft(3)
 		with self.assertRaisesRegex(IndexError, 'overwrite'):
 			r.appendleft(4)
+		with self.assertRaisesRegex(IndexError, 'overwrite'):
+			r.extendleft([4])
+		r.extendleft([])
 
 		np.testing.assert_equal(r, np.array([3, 1, 2]))
 		with self.assertRaisesRegex(IndexError, 'overwrite'):
 			r.append(4)
+		with self.assertRaisesRegex(IndexError, 'overwrite'):
+			r.extend([4])
+		r.extend([])
 
 		# works fine if we pop the surplus
 		r.pop()

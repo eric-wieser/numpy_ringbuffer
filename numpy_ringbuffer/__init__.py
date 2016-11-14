@@ -108,6 +108,54 @@ class RingBuffer(Sequence):
 		self._fix_indices()
 		return res
 
+	def extend(self, values):
+		lv = len(values)
+		if len(self) + lv > self._capacity:
+			if not self._allow_overwrite:
+				raise IndexError('extend a RingBuffer such that it would overflow, with overwrite disabled')
+			elif not len(self):
+				return
+		if lv >= self._capacity:
+			# wipe the entire array!
+			self._arr[...] = values[-self._capacity:]
+			self._right_index = self._capacity
+			self._left_index = 0
+			return
+
+		ri = self._right_index % self._capacity
+		sl1 = np.s_[ri:min(ri + lv, self._capacity)]
+		sl2 = np.s_[:max(ri + lv - self._capacity, 0)]
+		self._arr[sl1] = values[:sl1.stop - sl1.start]
+		self._arr[sl2] = values[sl1.stop - sl1.start:]
+		self._right_index += lv
+
+		self._left_index = max(self._left_index, self._right_index - self._capacity)
+		self._fix_indices()
+
+	def extendleft(self, values):
+		lv = len(values)
+		if len(self) + lv > self._capacity:
+			if not self._allow_overwrite:
+				raise IndexError('extend a RingBuffer such that it would overflow, with overwrite disabled')
+			elif not len(self):
+				return
+		if lv >= self._capacity:
+			# wipe the entire array!
+			self._arr[...] = values[:self._capacity]
+			self._right_index = self._capacity
+			self._left_index = 0
+			return
+
+		self._left_index -= lv
+		self._fix_indices()
+		li = self._left_index
+		sl1 = np.s_[li:min(li + lv, self._capacity)]
+		sl2 = np.s_[:max(li + lv - self._capacity, 0)]
+		self._arr[sl1] = values[:sl1.stop - sl1.start]
+		self._arr[sl2] = values[sl1.stop - sl1.start:]
+
+		self._right_index = min(self._right_index, self._left_index + self._capacity)
+
 
 	# implement Sequence methods
 	def __len__(self):
