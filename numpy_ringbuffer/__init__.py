@@ -1,6 +1,8 @@
 import numpy as np
 from collections import Sequence
 
+from .__about__ import *
+
 class RingBuffer(Sequence):
 	def __init__(self, capacity, dtype=float, allow_overwrite=True):
 		"""

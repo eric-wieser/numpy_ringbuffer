@@ -1,7 +1,18 @@
 from setuptools import setup, find_packages
+
+with open('numpy_ringbuffer/__about__.py') as f:
+    exec(f.read())
+
+try:
+    import pypandoc
+    long_description = pypandoc.convert('README.md', 'rst')
+except (IOError, ImportError):
+    print("No")
+    long_description = open('README.md').read()
+
 setup(
     name="numpy_ringbuffer",
-    version="0.1",
+    version=__version__,
     py_modules=['numpy_ringbuffer'],
 
     install_requires=["numpy"],
@@ -9,10 +20,11 @@ setup(
     author="Eric Wieser",
     author_email="wieser.eric+numpy@gmail.com",
     description="Ring buffer implementation for numpy",
+    long_description=long_description,
     license="MIT",
-    keywords="hello world example examples",
-    url="https://github.com/eric-wieser/raven-client",
-    download_url="https://github.com/eric-wieser/raven-client/tarball/0.6",
+    keywords=["numpy", "buffer", "ringbuffer", "circular buffer"],
+    url="https://github.com/eric-wieser/numpy_ringbuffer",
+    download_url="https://github.com/eric-wieser/numpy_ringbuffer/tarball/0.6",
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Intended Audience :: Developers",
