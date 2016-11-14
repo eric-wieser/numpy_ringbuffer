@@ -122,5 +122,34 @@ class TestAll(unittest.TestCase):
 
 		self.assertEqual(repr(r), '<RingBuffer of array([0, 1, 2, 3, 4])>')
 
+	def test_no_overwrite(self):
+		r = RingBuffer(3, allow_overwrite=False)
+		r.append(1)
+		r.append(2)
+		r.appendleft(3)
+		with self.assertRaisesRegex(IndexError, 'overwrite'):
+			r.appendleft(4)
+
+		np.testing.assert_equal(r, np.array([3, 1, 2]))
+		with self.assertRaisesRegex(IndexError, 'overwrite'):
+			r.append(4)
+
+		# works fine if we pop the surplus
+		r.pop()
+		r.append(4)
+		np.testing.assert_equal(r, np.array([3, 1, 4]))
+
+	def test_degenerate(self):
+		r = RingBuffer(0)
+		np.testing.assert_equal(r, np.array([]))
+
+		with self.assertRaisesRegex(ValueError, "degenerate"):
+			r.append(0)
+		with self.assertRaisesRegex(ValueError, "degenerate"):
+			r.appendleft(0)
+
+if not hasattr(TestAll, 'assertRaisesRegex'):
+	TestAll.assertRaisesRegex = TestAll.assertRaisesRegexp
+
 if __name__ == '__main__':
 	unittest.main()

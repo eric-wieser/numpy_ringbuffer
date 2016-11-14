@@ -24,7 +24,7 @@ setup(
     license="MIT",
     keywords=["numpy", "buffer", "ringbuffer", "circular buffer"],
     url="https://github.com/eric-wieser/numpy_ringbuffer",
-    download_url="https://github.com/eric-wieser/numpy_ringbuffer/tarball/0.6",
+    download_url="https://github.com/eric-wieser/numpy_ringbuffer/tarball/v"+__version__,
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Intended Audience :: Developers",
