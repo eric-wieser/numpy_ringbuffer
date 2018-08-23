@@ -32,6 +32,12 @@ class RingBuffer(Sequence):
 			self._arr[:max(self._right_index - self._capacity, 0)]
 		))
 
+	def wrap(self):
+		return np.concatenate((
+			self._arr[:max(self._right_index - self._capacity,0)],
+			self._arr[self._left_index:min(self._right_index,self._capacity)]
+		))
+
 	def _fix_indices(self):
 		"""
 		Enforce our invariant that 0 <= self._left_index < self._capacity
