@@ -172,7 +172,7 @@ class RingBuffer(Sequence):
 		if not isinstance(item, tuple):
 			item_arr = np.asarray(item)
 			if issubclass(item_arr.dtype.type, np.integer):
-				item_arr = (item_arr + self._left_index) % self._capacity
+				item_arr = ((item_arr % len(self)) + self._left_index) % self._capacity
 				return self._arr[item_arr]
 
 		# for everything else, get it right at the expense of efficiency
