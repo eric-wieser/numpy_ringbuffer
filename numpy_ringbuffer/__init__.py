@@ -16,7 +16,7 @@ class RingBuffer(Sequence):
 			Desired type of buffer elements. Use a type like (float, 2) to
 			produce a buffer with shape (N, 2)
 		allow_overwrite: bool
-			If false, throw an IndexError when trying to append to an alread
+			If false, throw an IndexError when trying to append to an already
 			full buffer
 		"""
 		self._arr = np.empty(capacity, dtype)
