@@ -98,12 +98,12 @@ class RingBuffer(Sequence):
 		self._fix_indices()
 		self._arr[self._left_index] = value
 
-	def pop(self):
-		if len(self) == 0:
+	def pop(self, numToPop=1):
+		if len(self) < numToPop:
 			raise IndexError("pop from an empty RingBuffer")
-		self._right_index -= 1
+		res = self[-numToPop:]
+		self._right_index -= numToPop
 		self._fix_indices()
-		res = self._arr[self._right_index % self._capacity]
 		return res
 
 	def popleft(self):
