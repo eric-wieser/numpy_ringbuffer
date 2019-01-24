@@ -98,6 +98,13 @@ class RingBuffer(Sequence):
 		self._fix_indices()
 		self._arr[self._left_index] = value
 
+	def discard(self, numToDiscard):
+		# similar to pop() but returns None
+		if len(self) < numToDiscard:
+			raise IndexError("discard from an empty RingBuffer")
+		self._right_index -= numToDiscard
+		self._fix_indices()
+
 	def pop(self, numToPop=1):
 		if len(self) < numToPop:
 			raise IndexError("pop from an empty RingBuffer")
