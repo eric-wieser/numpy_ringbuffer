@@ -10,7 +10,7 @@ class RingBuffer(Sequence):
 
 		Parameters
 		----------
-		capacity: int
+		capacity: int|tuple
 			The maximum capacity of the ring buffer
 		dtype: data-type, optional
 			Desired type of buffer elements. Use a type like (float, 2) to
@@ -20,6 +20,8 @@ class RingBuffer(Sequence):
 			full buffer
 		"""
 		self._arr = np.empty(capacity, dtype)
+		if isinstance(capacity, tuple):
+			capacity = capacity[0]
 		self._left_index = 0
 		self._right_index = 0
 		self._capacity = capacity

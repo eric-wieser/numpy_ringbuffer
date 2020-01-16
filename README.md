@@ -14,7 +14,8 @@ Ring (aka circular) buffers backed by a numpy array, supporting:
    * `b.popleft(val)`
  * The `collections.Sequence` protocol (unoptimized)
  * C-side unwrapping into an array with `np.array(b)`
- * Arbitrary element dtypes, including extra dimensions like `RingBuffer(N, dtype=(int, 3))`
+ * Arbitrary element dtypes, including extra dimensions like `RingBuffer(N, dtype=(int, 3))` or `RingBuffer((N, 3), dtype=3)`
+ * 1d circular columns via `RingBuffer((N, 1), dtype=int)`
 
 For example:
 
