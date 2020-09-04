@@ -185,6 +185,13 @@ class TestAll(unittest.TestCase):
 		except IndexError:
 			self.fail()
 
+	def test_raises_error_indexing_empty_buffer(self):
+		r = RingBuffer(10)
+		with self.assertRaises(IndexError,
+							   msg="Fails to raise an IndexError when "
+							   "trying to index an empty buffer."):
+			r[0]
+
 if not hasattr(TestAll, 'assertRaisesRegex'):
 	TestAll.assertRaisesRegex = TestAll.assertRaisesRegexp
 
