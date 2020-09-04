@@ -192,6 +192,16 @@ class TestAll(unittest.TestCase):
 							   "trying to index an empty buffer."):
 			r[0]
 
+	def test_negative_indices_give_recent_data_with_unfull_buffer(self):
+		r = RingBuffer(10)
+		for i in range(5):
+			r.append(i)
+		for i in reversed(range(-len(r), 0)):
+			self.assertAlmostEqual(r[i], r[i+5],
+								   msg="Fails to index from the back of "
+								   "the filled portion of the buffer "
+								   "given a negative index.")
+
 if not hasattr(TestAll, 'assertRaisesRegex'):
 	TestAll.assertRaisesRegex = TestAll.assertRaisesRegexp
 
