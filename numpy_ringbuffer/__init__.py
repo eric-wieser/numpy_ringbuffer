@@ -19,6 +19,8 @@ class RingBuffer(Sequence):
 			If false, throw an IndexError when trying to append to an already
 			full buffer
 		"""
+		self._modified = False
+		self._unwrapped = None
 		self._arr = np.empty(capacity, dtype)
 		self._left_index = 0
 		self._right_index = 0
@@ -27,10 +29,13 @@ class RingBuffer(Sequence):
 
 	def _unwrap(self):
 		""" Copy the data from this buffer into unwrapped form """
-		return np.concatenate((
-			self._arr[self._left_index:min(self._right_index, self._capacity)],
-			self._arr[:max(self._right_index - self._capacity, 0)]
-		))
+		if self._modified or self._unwrapped is None:
+			self._unwrapped = np.concatenate((
+				self._arr[self._left_index:min(self._right_index, self._capacity)],
+				self._arr[:max(self._right_index - self._capacity, 0)]
+			))
+
+		return self._unwrapped
 
 	def _fix_indices(self):
 		"""
@@ -39,9 +44,11 @@ class RingBuffer(Sequence):
 		if self._left_index >= self._capacity:
 			self._left_index -= self._capacity
 			self._right_index -= self._capacity
+			self._modified = True
 		elif self._left_index < 0:
 			self._left_index += self._capacity
 			self._right_index += self._capacity
+			self._modified = True
 
 	@property
 	def is_full(self):
@@ -60,7 +67,6 @@ class RingBuffer(Sequence):
 	def shape(self):
 		return (len(self),) + self._arr.shape[1:]
 
-
 	# these mirror methods from deque
 	@property
 	def maxlen(self):
@@ -78,6 +84,7 @@ class RingBuffer(Sequence):
 		self._arr[self._right_index % self._capacity] = value
 		self._right_index += 1
 		self._fix_indices()
+		self._modified = True
 
 	def appendleft(self, value):
 		if self.is_full:
@@ -91,12 +98,14 @@ class RingBuffer(Sequence):
 		self._left_index -= 1
 		self._fix_indices()
 		self._arr[self._left_index] = value
+		self._modified = True
 
 	def pop(self):
 		if len(self) == 0:
 			raise IndexError("pop from an empty RingBuffer")
 		self._right_index -= 1
 		self._fix_indices()
+		self._modified = True
 		res = self._arr[self._right_index % self._capacity]
 		return res
 
@@ -106,6 +115,7 @@ class RingBuffer(Sequence):
 		res = self._arr[self._left_index]
 		self._left_index += 1
 		self._fix_indices()
+		self._modified = True
 		return res
 
 	def extend(self, values):
@@ -120,6 +130,7 @@ class RingBuffer(Sequence):
 			self._arr[...] = values[-self._capacity:]
 			self._right_index = self._capacity
 			self._left_index = 0
+			self._modified = True
 			return
 
 		ri = self._right_index % self._capacity
@@ -131,6 +142,7 @@ class RingBuffer(Sequence):
 
 		self._left_index = max(self._left_index, self._right_index - self._capacity)
 		self._fix_indices()
+		self._modified = True
 
 	def extendleft(self, values):
 		lv = len(values)
@@ -144,6 +156,7 @@ class RingBuffer(Sequence):
 			self._arr[...] = values[:self._capacity]
 			self._right_index = self._capacity
 			self._left_index = 0
+			self._modified = True
 			return
 
 		self._left_index -= lv
@@ -155,7 +168,7 @@ class RingBuffer(Sequence):
 		self._arr[sl2] = values[sl1.stop - sl1.start:]
 
 		self._right_index = min(self._right_index, self._left_index + self._capacity)
-
+		self._modified = True
 
 	# implement Sequence methods
 	def __len__(self):
