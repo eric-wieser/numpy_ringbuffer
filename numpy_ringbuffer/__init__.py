@@ -34,6 +34,7 @@ class RingBuffer(Sequence):
 				self._arr[self._left_index:min(self._right_index, self._capacity)],
 				self._arr[:max(self._right_index - self._capacity, 0)]
 			))
+			self._modified = False
 
 		return self._unwrapped
 
