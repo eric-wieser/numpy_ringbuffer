@@ -5,7 +5,7 @@ with open('numpy_ringbuffer/__about__.py') as f:
 
 try:
     import pypandoc
-    long_description = pypandoc.convert('README.md', 'rst')
+    long_description = pypandoc.convert_file('README.md', 'rst')
 except (IOError, ImportError):
     print("No")
     long_description = open('README.md').read()
