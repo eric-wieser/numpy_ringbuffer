@@ -1,5 +1,10 @@
 import numpy as np
-from collections import Sequence
+try:
+    # Python <=3.9
+    from collections import Sequence
+except ImportError:
+    # Python > 3.8
+    from collections.abc import Sequence
 
 from .__about__ import *
 
