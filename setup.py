@@ -3,12 +3,22 @@ from setuptools import setup
 with open('numpy_ringbuffer/__about__.py') as f:
     exec(f.read())
 
+def read_txt_file(filename):
+    return open(filename).read()
+
 try:
-    import pypandoc
-    long_description = pypandoc.convert_file('README.md', 'rst')
-except (IOError, ImportError):
-    print("No")
-    long_description = open('README.md').read()
+    # pypandoc < 1.8
+    from pypandoc import convert
+    read_txt_file = lambda x: convert(x, 'rst')
+except:
+    pass
+
+try:
+    # pypandoc >= 1.8
+    from pypandoc import convert_file
+    read_txt_file = lambda x: convert_file(x, 'rst')
+except:
+    pass
 
 setup(
     name="numpy_ringbuffer",
@@ -20,7 +30,7 @@ setup(
     author="Eric Wieser",
     author_email="wieser.eric+numpy@gmail.com",
     description="Ring buffer implementation for numpy",
-    long_description=long_description,
+    long_description=read_txt_file('README.md'),
     license="MIT",
     keywords=["numpy", "buffer", "ringbuffer", "circular buffer"],
     url="https://github.com/eric-wieser/numpy_ringbuffer",
