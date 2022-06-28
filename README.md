@@ -1,6 +1,6 @@
 # numpy_ringbuffer
 
-[![Build Status](https://travis-ci.org/eric-wieser/numpy_ringbuffer.svg?branch=master)](https://travis-ci.org/eric-wieser/numpy_ringbuffer)
+[![Build Status](https://github.com/eric-wieser/numpy_ringbuffer/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/eric-wieser/numpy_ringbuffer/actions/workflows/main.yml)
 [![codecov](https://codecov.io/gh/eric-wieser/numpy_ringbuffer/branch/master/graph/badge.svg)](https://codecov.io/gh/eric-wieser/numpy_ringbuffer)
 
 Ring (aka circular) buffers backed by a numpy array, supporting:
