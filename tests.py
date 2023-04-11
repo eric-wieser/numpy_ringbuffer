@@ -95,6 +95,15 @@ class TestAll(unittest.TestCase):
 		r.extend([1, 2, 3, 4, 5, 6, 7])
 		np.testing.assert_equal(r, np.array([3, 4, 5, 6, 7]))
 
+		# test empty extend with overflow
+		r = RingBuffer(5)
+		r.extendleft([1, 2, 3, 4, 5, 6, 7])
+		np.testing.assert_equal(r, np.array([1, 2, 3, 4, 5]))
+
+		r = RingBuffer(5)
+		r.extend([1, 2, 3, 4, 5, 6, 7])
+		np.testing.assert_equal(r, np.array([3, 4, 5, 6, 7]))
+
 	def test_pops(self):
 		r = RingBuffer(3)
 		r.append(1)
