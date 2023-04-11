@@ -23,6 +23,11 @@ class RingBuffer(Sequence):
 			If false, throw an IndexError when trying to append to an already
 			full buffer
 		"""
+		# Check parameters
+		if not isinstance(capacity, int):
+			raise TypeError('capacity must be an integer')
+		assert capacity >= 0, 'capacity must be non-negative'
+
 		self._arr = np.empty(capacity, dtype)
 		self._left_index = 0
 		self._right_index = 0
