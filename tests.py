@@ -5,10 +5,10 @@ from numpy_ringbuffer import RingBuffer
 class TestAll(unittest.TestCase):
 	def test_dtype(self):
 		r = RingBuffer(5)
-		self.assertEqual(r.dtype, np.dtype(np.float64))
+		self.assertEqual(r.dtype, np.float64)
 
-		r = RingBuffer(5, dtype=np.bool)
-		self.assertEqual(r.dtype, np.dtype(np.bool))
+		r = RingBuffer(5, dtype=bool)
+		self.assertEqual(r.dtype, bool)
 
 	def test_sizes(self):
 		r = RingBuffer(5, dtype=(int, 2))
@@ -125,7 +125,7 @@ class TestAll(unittest.TestCase):
 			empty.popleft()
 
 	def test_2d(self):
-		r = RingBuffer(5, dtype=(np.float, 2))
+		r = RingBuffer(5, dtype=(float, 2))
 
 		r.append([1, 2])
 		np.testing.assert_equal(r, np.array([[1, 2]]))
@@ -154,7 +154,7 @@ class TestAll(unittest.TestCase):
 			self.assertEqual(i, j)
 
 	def test_repr(self):
-		r = RingBuffer(5, dtype=np.int)
+		r = RingBuffer(5, dtype=int)
 		for i in range(5):
 			r.append(i)
 
