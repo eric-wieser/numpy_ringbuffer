@@ -24,8 +24,6 @@ class RingBuffer(Sequence):
 			full buffer
 		"""
 		# Check parameters
-		if not isinstance(capacity, int):
-			raise TypeError('capacity must be an integer')
 		assert capacity >= 0, 'capacity must be non-negative'
 
 		self._arr = np.empty(capacity, dtype)
