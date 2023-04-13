@@ -24,7 +24,8 @@ class RingBuffer(Sequence):
 			full buffer
 		"""
 		# Check parameters
-		assert capacity >= 0, 'capacity must be non-negative'
+		if not capacity >= 0:
+			raise ValueError('capacity must be non-negative')
 
 		self._arr = np.empty(capacity, dtype)
 		self._left_index = 0
