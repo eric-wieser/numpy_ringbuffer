@@ -22,7 +22,7 @@ For example:
 import numpy as np
 from numpy_ringbuffer import RingBuffer
 
-r = RingBuffer(capacity=4, dtype=np.bool)
+r = RingBuffer(capacity=4, dtype=bool)
 r.append(True)
 r.appendleft(False)
 print(np.array(r))  # array([False, True])
