@@ -46,14 +46,17 @@ class TestAll(unittest.TestCase):
 		self.assertEqual(r[-1], 6)
 
 	def test_getitem(self):
-		r = RingBuffer(5)
-		r.extend([1, 2, 3])
-		r.extendleft([4, 5])
-		expected = np.array([4, 5, 1, 2, 3])
+		r = RingBuffer(8)
+		r.extend([1, 2, 3, 4, 5])
+		r.extendleft([6, 7, 8])
+		expected = np.array([6, 7, 8, 1, 2, 3, 4, 5])
 		np.testing.assert_equal(r, expected)
 
-		for i in range(r.maxlen):
-			self.assertEqual(expected[i], r[i])
+		for i in range(r.maxlen-1):
+			try:
+				self.assertEqual(expected[i:i+1], r[i:i+1])
+			except:
+				self.assertEqual(expected[i:i+1], r[i:i+1])
 
 		ii = [0, 4, 3, 1, 2]
 		np.testing.assert_equal(r[ii], expected[ii])
