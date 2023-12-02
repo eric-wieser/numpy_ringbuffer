@@ -23,6 +23,10 @@ class RingBuffer(Sequence):
 			If false, throw an IndexError when trying to append to an already
 			full buffer
 		"""
+		# Check parameters
+		if not capacity >= 0:
+			raise ValueError('capacity must be non-negative')
+
 		self._arr = np.empty(capacity, dtype)
 		self._left_index = 0
 		self._right_index = 0
@@ -74,7 +78,7 @@ class RingBuffer(Sequence):
 		if self.is_full:
 			if not self._allow_overwrite:
 				raise IndexError('append to a full RingBuffer with overwrite disabled')
-			elif not len(self):
+			elif not self._capacity:
 				return
 			else:
 				self._left_index += 1
@@ -87,7 +91,7 @@ class RingBuffer(Sequence):
 		if self.is_full:
 			if not self._allow_overwrite:
 				raise IndexError('append to a full RingBuffer with overwrite disabled')
-			elif not len(self):
+			elif not self._capacity:
 				return
 			else:
 				self._right_index -= 1
@@ -117,7 +121,7 @@ class RingBuffer(Sequence):
 		if len(self) + lv > self._capacity:
 			if not self._allow_overwrite:
 				raise IndexError('extend a RingBuffer such that it would overflow, with overwrite disabled')
-			elif not len(self):
+			elif not self._capacity:
 				return
 		if lv >= self._capacity:
 			# wipe the entire array! - this may not be threadsafe
@@ -141,7 +145,7 @@ class RingBuffer(Sequence):
 		if len(self) + lv > self._capacity:
 			if not self._allow_overwrite:
 				raise IndexError('extend a RingBuffer such that it would overflow, with overwrite disabled')
-			elif not len(self):
+			elif not self._capacity:
 				return
 		if lv >= self._capacity:
 			# wipe the entire array! - this may not be threadsafe
