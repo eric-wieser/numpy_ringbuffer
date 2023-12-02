@@ -166,11 +166,17 @@ class RingBuffer(Sequence):
 		return self._right_index - self._left_index
 
 	def __getitem__(self, item):
+		if len(self) == 0:
+			raise IndexError("Buffer is empty")
 		# handle simple (b[1]) and basic (b[np.array([1, 2, 3])]) fancy indexing specially
 		if not isinstance(item, tuple):
 			item_arr = np.asarray(item)
 			if issubclass(item_arr.dtype.type, np.integer):
-				item_arr = (item_arr + self._left_index) % self._capacity
+				if self.is_full:
+					item_arr = (item_arr + self._left_index) % self._capacity
+				else:
+					item_arr = ((item_arr + self._left_index)
+								% self._right_index)
 				return self._arr[item_arr]
 
 		# for everything else, get it right at the expense of efficiency
