@@ -58,6 +58,20 @@ class TestAll(unittest.TestCase):
 		ii = [0, 4, 3, 1, 2]
 		np.testing.assert_equal(r[ii], expected[ii])
 
+	def test_getitem_from_right(self):
+		r = RingBuffer(5, dtype=int)
+		r.append(1)
+		for num in range(2, 5):
+			r.append(num)
+			self.assertEqual(r[-1], num)
+		for num in range(5, 13):
+			r.append(num)
+			self.assertEqual(r[-1], num)
+			self.assertEqual(r[-2], num - 1)
+			self.assertEqual(r[-5], num - 4)
+		np.testing.assert_equal(r[-4:], [9, 10, 11, 12])
+		np.testing.assert_equal(r[-5:-2], [8, 9, 10])
+
 	def test_appendleft(self):
 		r = RingBuffer(5)
 
